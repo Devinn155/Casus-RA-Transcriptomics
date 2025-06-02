@@ -9,7 +9,7 @@
 * data_stewardship/ - Aantonen dat ik de compenties beheer
   
 # Inleiding
-
+Reumatoïde artritis (RA) is een type chronische autoimmuun ziekte dat wordt gekenmerkt door ontstekingen in de gewrichten en progressieve weefselschade.  
 # Methoden
 
 # Resultaten
