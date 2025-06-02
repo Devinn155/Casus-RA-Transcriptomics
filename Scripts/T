@@ -1,1 +1,208 @@
+# Installatie van benodigde Bioconductor packages
+install.packages("BiocManager")
+BiocManager::install("Rsubread")
+BiocManager::install("Rsamtools")
+BiocManager::install("DESeq2")
+BiocManager::install("KEGGREST")
+BiocManager::install("EnhancedVolcano")
+BiocManager::install("pathview")
+BiocManager::install("goseq")
+BiocManager::install("geneLenDataBase")
+BiocManager::install("org.Hs.eg.db")
+BiocManager::install("pheatmap")
 
+# Laden van bibliotheken voor analyse
+library("pheatmap")
+library("pathview")
+library("readr")
+library("dplyr")
+library("Rsubread")
+library("Rsamtools")
+library("DESeq2")
+library("KEGGREST")
+library("EnhancedVolcano")
+library("clusterProfiler")
+library("goseq")
+library("geneLenDataBase")
+library("org.Hs.eg.db")
+
+# Referentie-index bouwen voor alignments
+buildindex(
+  basename = "ref_human",
+  reference = 'GCF_000001405.40_GRCh38.p14_genomic.fna',
+  memory = 4000,
+  indexSplit = TRUE)
+
+# Reads van controle en RA-monsters alignen met referentie
+align.ctrl1 <- align(index = "ref_human",
+                     readfile1 = "SRR4785819_1_subset40k.fastq",
+                     readfile2 = "SRR4785819_2_subset40k.fastq",
+                     output_file = "ctrl1.bam")
+
+align.ctrl2 <- align(index = "ref_human",
+                     readfile1 = "SRR4785820_1_subset40k.fastq",
+                     readfile2 = "SRR4785820_2_subset40k.fastq",
+                     output_file = "ctrl2.bam")
+
+align.ctrl3 <- align(index = "ref_human",
+                     readfile1 = "SRR4785828_1_subset40k.fastq",
+                     readfile2 = "SRR4785828_2_subset40k.fastq",
+                     output_file = "ctrl3.bam")
+
+align.ctrl4 <- align(index = "ref_human",
+                     readfile1 = "SRR4785831_1_subset40k.fastq",
+                     readfile2 = "SRR4785831_2_subset40k.fastq",
+                     output_file = "ctrl4.bam")
+
+align.RA1 <- align(index = "ref_human",
+                   readfile1 = "SRR4785979_1_subset40k.fastq",
+                   readfile2 = "SRR4785979_2_subset40k.fastq",
+                   output_file = "RA1.bam")
+
+align.RA2 <- align(index = "ref_human",
+                   readfile1 = "SRR4785980_1_subset40k.fastq",
+                   readfile2 = "SRR4785980_2_subset40k.fastq",
+                   output_file = "RA2.bam")
+
+align.RA3 <- align(index = "ref_human",
+                   readfile1 = "SRR4785986_1_subset40k.fastq",
+                   readfile2 = "SRR4785986_2_subset40k.fastq",
+                   output_file = "RA3.bam")
+
+align.RA4 <- align(index = "ref_human",
+                   readfile1 = "SRR4785988_1_subset40k.fastq",
+                   readfile2 = "SRR4785988_2_subset40k.fastq",
+                   output_file = "RA4.bam")
+
+# BAM-bestanden sorteren en indexeren
+samples <- c("ctrl1", "ctrl2", "ctrl3", "ctrl4", "RA1", "RA2", "RA3", "RA4")
+
+lapply(samples, function(s) {sortBam(file = paste0(s, '.BAM'), destination = paste0(s, '.sorted'))})
+lapply(samples, function(s) {indexBam(paste0(s, '.sorted.bam'))})
+
+# Lijst van alle BAM-bestanden
+allsamples <- c("ctrl1.BAM", "ctrl2.BAM", "ctrl3.BAM", "ctrl4.BAM", "RA1.BAM", "RA2.BAM", "RA3.BAM", "RA4.BAM" )
+
+# Header-informatie uit een BAM-bestand halen
+hdr <- scanBamHeader("RA4.bam")
+names(hdr[[1]]$targets)
+
+# Gen tellingen uitvoeren met featureCounts
+count_matrix <- featureCounts(
+  files = allsamples,
+  annot.ext = "GCF_000001405.40_GRCh38.p14_genomic.gtf",
+  isPairedEnd = TRUE,
+  isGTFAnnotationFile = TRUE,
+  GTF.attrType = "gene_id",
+  useMetaFeatures = TRUE,
+)
+
+# Bekijk annotaties en tellingen
+head(count_matrix$annotation)
+head(count_matrix$counts)
+str(count_matrix)
+
+# Inladen van tellingen uit bestand
+counts <- data.table::fread('/Users/devinvanderschaar/Desktop/Casus RA/count_matrix.txt')
+
+# Kolomnamen instellen
+colnames(counts) <- c("Gene name", "ctrl1", "ctrl2", "ctrl3", "ctrl4", "RA1", "RA2", "RA3", "RA4")
+
+# Wegschrijven als CSV en opnieuw inladen
+write.csv(counts, "countmatrix.csv")
+counts <- read.csv("countmatrix.csv", row.names = 1)
+str(counts)
+
+# Zet genennamen als rownames en verwijder kolom
+rownames(counts) <- counts$Gene.name
+counts$Gene.name <- NULL
+
+# Metadata per sample aanmaken
+fileType <- c("control", "control", "control", "control", "RA", "RA", "RA", "RA")
+typeTable <- data.frame(fileType)
+rownames(typeTable) <- c("ctrl1", "ctrl2", "ctrl3", "ctrl4", "RA1", "RA2", "RA3", "RA4")
+
+# DESeq2 object aanmaken
+dds <- DESeqDataSetFromMatrix(countData = round(counts),
+                              colData = typeTable,
+                              design = ~ fileType)
+
+# Differential expressie analyse uitvoeren
+dds <- DESeq(dds)
+resultaat <- results(dds)
+
+# Resultaten opslaan
+write.table(resultaat, file = "ResultatenProject.csv", row.names = TRUE, col.names = TRUE)
+
+# Aantal genen tellen met significante expressieverschillen
+sum(resultaat$padj < 0.05 & resultaat$log2FoldChange > 1, na.rm = TRUE)
+sum(resultaat$padj < 0.05 & resultaat$log2FoldChange < -1, na.rm = TRUE)
+
+# Ordenen van resultaten
+hoogste_fold_change <- resultaat[order(resultaat$log2FoldChange, decreasing = TRUE), ]
+laagste_fold_change <- resultaat[order(resultaat$log2FoldChange, decreasing = FALSE), ]
+laagste_p_waarde <- resultaat[order(resultaat$padj, decreasing = FALSE), ]
+
+# Volcano plot maken van resultaten
+EnhancedVolcano(resultaat,
+                lab = rownames(resultaat),
+                x = "log2FoldChange",
+                y = "padj",
+                col = c("blue2", "salmon", "red4", "darkolivegreen4"),
+                colAlpha = 0.6)
+
+# Voor Pathview: genvector aanmaken met log2FoldChange en gennamen
+gene_vector <- resultaat$log2FoldChange
+names(gene_vector) <- rownames(resultaat)
+
+# Pathway visualiseren met Pathview
+pathview(
+  gene.data = gene_vector,
+  pathway.id = "04064",
+  species = "hsa",        
+  gene.idtype = "SYMBOL",
+  limit = list(gene = 5))
+
+keggGet("hsa05200")[[1]]$NAME
+
+# Mapping van genennamen naar Entrez-ID
+entrez_ids <- mapIds(org.Hs.eg.db,
+                     keys = rownames(resultaat),
+                     keytype = "SYMBOL",
+                     column = "ENTREZID")
+
+# Alleen geldige Entrez-ID’s behouden
+entrez_ids <- entrez_ids[!is.na(entrez_ids)]
+
+# Filteren op significante genen (padj < 0.05 en |log2FC| > 1)
+sig_genes <- resultaat[rownames(resultaat) %in% names(entrez_ids), ]
+sig_genes <- sig_genes$padj < 0.05 & abs(sig_genes$log2FoldChange) > 1
+
+# KEGG-enrichment analyse uitvoeren
+ekegg <- enrichKEGG(
+  gene = entrez_ids[sig_genes], 
+  organism = 'hsa',                
+  universe = NULL,             
+)
+
+# Dotplot voor KEGG-termen
+dotplot(ekegg, showCategory = 15) +  
+  ggtitle("KEGG Enrichment Analysis") +
+  theme(axis.text.y = element_text(size = 8))
+
+# Barplot voor top KEGG-termen
+barplot(ekegg, showCategory = 15) +  
+  ggtitle("Top KEGG Terms") +
+  theme(axis.text.y = element_text(size = 8))
+
+# Heatmap voor top 50 genen
+vsd <- vst(dds, blind = TRUE)
+top_genes <- head(order(resultaat$padj), 50)
+heatmap_data <- assay(vsd)[top_genes,]
+
+pheatmap(heatmap_data,
+         cluster_rows = TRUE,
+         cluster_cols = TRUE,
+         scale = "row",
+         main = "Top 50 genen (VST)",
+         color = colorRampPalette(c("navy", "white", "firebrick"))(50))
