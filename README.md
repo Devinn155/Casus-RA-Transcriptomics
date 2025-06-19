@@ -22,10 +22,8 @@ Genexpressie telling werd verkregen met featureCounts(), gebruikmakend van een b
 Voor interpretatie werden significante genen omgezet naar Entrez-ID's (org.Hs.eg.db), gevolgd door verrijkings analyses met clusterProfiler voor KEGG- en GO-termen. Voor de visualisatie werden dotplots en barplots van de verrijkte pathways gemaakt. De Pathview-tool werd gebruikt voor het mappen van differentieel tot expressie gebrachte genen op specifieke KEGG-pathways.
 
 # Resultaten
-Na kwaliteitscontrole en alignering van de RNA-seq reads op het humane referentiegenoom GRCh38.p14 werden per sample gemiddeld tienduizenden genen geteld met behulp van featureCounts. Na normalisatie met DESeq2 werden in totaal 1.203 genen geïdentificeerd met significante differentiële expressie tussen RA-patiënten en controles (padj < 0.05). Van deze genen waren er 654 opgereguleerd en 549 neer gereguleerd in RA-samples (log2 fold change > 1 of < –1).
-
 Een volcano plot toonde een duidelijke scheiding tussen op- en neer gereguleerde genen. De topgenen met de hoogste log2 fold change omvatten onder andere SRGN, BCL2A1 en PTGFR, die bekend staan om hun rol in ontsteking. De heatmap van de 50 meest significant gedifferentieerd tot expressie gebrachte genen toonde een duidelijke clustering van RA- versus controlesamples.
 
-KEGG-verrijkingsanalyse wees op significante verrijking van pathways gerelateerd aan “Cytokine-cytokine receptor interaction”, “NF-kappa B signaling pathway” en “Rheumatoid arthritis”. Gene Ontology-analyse (GO) van biologische processen toonde verrijking voor termen als “inflammatory response” en “immune system process”.
+KEGG-pathwayverrijking toonde significante betrokkenheid van onder andere “Cytokine-cytokine receptor interaction”, “Rheumatoid arthritis” en “TNF signaling pathway”. GO-analyse bevestigde de activering van biologische processen zoals “immune response”, “chemokine-mediated signaling pathway” en “leukocyte migration”.
 
 # Conclusie 
