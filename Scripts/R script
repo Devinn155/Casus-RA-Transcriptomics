@@ -149,7 +149,7 @@ EnhancedVolcano(resultaat,
                 x = "log2FoldChange",
                 y = "padj",
                 col = c("blue2", "salmon", "red4", "darkolivegreen4"),
-                colAlpha = 0.6)
+                colAlpha = 0.4)
 
 # Voor Pathview: genvector aanmaken met log2FoldChange en gennamen
 gene_vector <- resultaat$log2FoldChange
@@ -162,8 +162,6 @@ pathview(
   species = "hsa",        
   gene.idtype = "SYMBOL",
   limit = list(gene = 5))
-
-keggGet("hsa05200")[[1]]$NAME
 
 # Mapping van genennamen naar Entrez-ID
 entrez_ids <- mapIds(org.Hs.eg.db,
@@ -185,14 +183,29 @@ ekegg <- enrichKEGG(
   universe = NULL,             
 )
 
+ego <- enrichGO(gene = entrez_ids[sig_genes],
+                OrgDb = org.Hs.eg.db,
+                ont = "BP",
+                pAdjustMethod = "BH",
+                pvalueCutoff = 0.05,
+                qvalueCutoff = 0.05)
+
 # Dotplot voor KEGG-termen
 dotplot(ekegg, showCategory = 15) +  
   ggtitle("KEGG Enrichment Analysis") +
   theme(axis.text.y = element_text(size = 8))
 
+dotplot(ego, showCategory = 15) +  
+  ggtitle("GO Enrichment Analysis") +
+  theme(axis.text.y = element_text(size = 8))
+
 # Barplot voor top KEGG-termen
 barplot(ekegg, showCategory = 15) +  
   ggtitle("Top KEGG Terms") +
+  theme(axis.text.y = element_text(size = 8))
+
+barplot(ego, showCategory = 15) +  
+  ggtitle("Top GO Terms") +
   theme(axis.text.y = element_text(size = 8))
 
 # Heatmap voor top 50 genen
