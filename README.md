@@ -9,10 +9,11 @@
 * data_stewardship/ - Aantonen dat ik de compenties beheer
   
 # Inleiding
-Reumatoïde artritis (RA) is een type chronische autoimmuun ziekte dat wordt gekenmerkt door ontstekingen in de gewrichten en progressieve weefselschade. RA komt ongeveer bij 0,5% - 1,0% bij de bevolking voor. Dit omvat zowel veranderingen in DNA-sequenties als epigenetische en transcriptionele processen die de genexpressie beïnvloeden. Genen die betrokken zijn bij ontstekings- en immuunroutes, zoals TNF, IL6, STAT1 en CXCL10, vertonen vaak afwijkende expressiepatronen bij RA-patiënten.
+Reumatoïde artritis (RA) is een chronische auto-immuunziekte die wordt gekenmerkt door aanhoudende ontstekingen in de synoviale gewrichten, leidend tot progressieve weefselschade, pijn en functieverlies (McInnes & Schett, 2011). De prevalentie van RA ligt wereldwijd tussen de 0,5% en 1%, waarbij vrouwen vaker getroffen worden dan mannen (Smolen et al., 2016). Hoewel de exacte oorzaak van RA niet volledig begrepen is, blijkt uit onderzoek dat zowel genetische factoren als epigenetische en transcriptionele regulatie een belangrijke rol spelen in het ontstaan en het verloop van de ziekte (Firestein & McInnes, 2017).
 
+Genen die betrokken zijn bij ontstekingsprocessen en immuunroutes, zoals TNF, IL6, STAT1 en CXCL10, vertonen vaak een verhoogde expressie bij RA-patiënten in vergelijking met gezonde individuen (Wang et al., 2018). Deze genen dragen bij aan de activering van immuuncellen en het in stand houden van het ontstekingsproces. Door middel van transcriptoomanalyse kunnen zulke verschillen in genexpressie in kaart worden gebracht, wat inzichten kan opleveren in de onderliggende moleculaire mechanismen van RA.
 
-Op basis van bovenstaande informatie is het volgende doel opgesteld: Het vergelijken van samples van patienten met RA en controle monsters om de verschillen in de gen expressie te vergelijken met behukp van een transcriptoom analyse in R studio.
+Het doel van dit onderzoek is om met behulp van RNA-sequencing data en bioinformatica-analyse in RStudio de genexpressie te vergelijken tussen RA-patiënten en gezonde controles.
 
 # Methoden
 Voor deze studie werden RNA-seq datasets van vier reumatoïde artritis (RA) patiënten en vier gezonde controles gebruikt. De sequenties (paired-end) werden gealigned op het humane referentiegenoom GRCh38.p14 (GCF_000001405.40) met behulp van de align() functie van het Bioconductor-pakket Rsubread. Voorafgaand aan de alignments werd een referentie-index gegenereerd met buildindex(). De resulterende BAM-bestanden werden gesorteerd en geïndexeerd via Rsamtools.
