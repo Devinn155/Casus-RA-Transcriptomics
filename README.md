@@ -21,6 +21,9 @@ Voor deze studie werden RNA-seq datasets van vier reumatoïde artritis (RA) pati
 Genexpressie telling werd verkregen met featureCounts(), gebruikmakend van een bijbehorend GTF-annotatiebestand. De rauwe tellingen werden verwerkt met DESeq2 voor normalisatie en differentiële expressie-analyse. Genen met een aangepaste p-waarde < 0.05 en een absolute log2 fold change > 1 werden als significant beschouwd. Visualisatie van resultaten gebeurde onder andere via een volcano plot (EnhancedVolcano) en een heatmap van de top 50 variantste genen (pheatmap).
 
 Voor interpretatie werden significante genen omgezet naar Entrez-ID's (org.Hs.eg.db), gevolgd door verrijkings analyses met clusterProfiler voor KEGG- en GO-termen. Voor de visualisatie werden dotplots en barplots van de verrijkte pathways gemaakt. De Pathview-tool werd gebruikt voor het mappen van differentieel tot expressie gebrachte genen op specifieke KEGG-pathways.
+![lll](https://github.com/user-attachments/assets/ffd21e6c-a7e7-4a8a-80cb-beb7e50483bf)
+
+
 
 # Resultaten
 Een volcano plot toonde een duidelijke scheiding tussen op- en neer gereguleerde genen. De topgenen met de hoogste log2 fold change omvatten onder andere SRGN, BCL2A1 en PTGFR, die bekend staan om hun rol in ontsteking. Vervolgens werden deze bevindingen gecontroleerd met een heatmap om te kijken of deze ook significant hoger tot expressie kwamen. Uit deze analyse kwam dat genen zoals BCL2A1, SRGN en CYTIP significant veel hoger tot expressie kwamen in de RA groep dan in de controle groep.
