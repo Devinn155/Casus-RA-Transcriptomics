@@ -26,7 +26,7 @@ Voor interpretatie werden significante genen omgezet naar Entrez-ID's (org.Hs.eg
 
 
 # Resultaten
-Een volcano plot toonde een duidelijke scheiding tussen op- en neer gereguleerde genen. De topgenen met de hoogste log2 fold change omvatten onder andere SRGN, BCL2A1 en PTGFR, die bekend staan om hun rol in ontsteking. Vervolgens werden deze bevindingen gecontroleerd met een heatmap om te kijken of deze ook significant hoger tot expressie kwamen. Uit deze analyse kwam dat genen zoals BCL2A1, SRGN en CYTIP significant veel hoger tot expressie kwamen in de RA groep dan in de controle groep.
+Een [volcano plot](https://github.com/Devinn155/Casus-RA-Transcriptomics/blob/main/Resultaten/Volcano%20plot) toonde een duidelijke scheiding tussen op- en neer gereguleerde genen. De topgenen met de hoogste log2 fold change omvatten onder andere SRGN, BCL2A1 en PTGFR, die bekend staan om hun rol in ontsteking. Vervolgens werden deze bevindingen gecontroleerd met een heatmap om te kijken of deze ook significant hoger tot expressie kwamen. Uit deze analyse kwam dat genen zoals BCL2A1, SRGN en CYTIP significant veel hoger tot expressie kwamen in de RA groep dan in de controle groep.
 
 De KEGG-pathwayverrijking analyse toonde significante betrokkenheid van onder andere “Epstein Barr virus”, “Rheumatoid arthritis” en “MAPK signaling pathway” pathways. GO-analyse bevestigde de activering van biologische processen zoals “Lymphocyte differentiation”, “Lymphocyte mediated immunity” en “leukocyte mediated immunity”.
 
